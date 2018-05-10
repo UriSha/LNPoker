@@ -272,6 +272,9 @@ PyPoker = {
                     break;
                 case 'winner':
                   //  var pay_req_c = request_invoice(message.money); // TODO
+                    console.log("*********************************");
+                    console.log("I am the winner! i got " + message.money);
+                    console.log("*******************************");
                     var pay_req_c = "abra";
                     PyPoker.socket.send(JSON.stringify({
                         'message_type': 'pay_req_c',

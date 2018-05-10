@@ -639,7 +639,7 @@ class PokerGame:
             except ZeroDivisionError:
                 raise GameError("No players left")
             else:
-                for winner in winners:  # TODO LNdragons
+                for winner in winners:
 
 
                     winner.send_message({
