@@ -1,6 +1,7 @@
 from . import ChannelError, MessageTimeout, MessageFormatError
 import gevent
 import time
+import LND_api
 
 
 class GameError(Exception):
@@ -442,6 +443,14 @@ class GameBetRounder:
             else:
                 if bet < min_bet or bet > max_bet:
                     raise ValueError("Invalid bet")
+                pay_req = LND_api.request_invoice(bet)
+                dealer.send_message({
+                    "message_type": "game-update",
+                    "event": "pay_req",
+                    "pay_req": pay_req,
+                    "player": player.dto()
+
+                })
                 dealer.take_money(bet)
                 bets[dealer.id] += bet
                 if best_player is None or bet > min_bet:

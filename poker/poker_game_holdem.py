@@ -2,6 +2,7 @@ from . import DeckFactory, HoldemPokerScoreDetector
 from poker_game import PokerGame, GameFactory, GameError, EndGameException, GamePlayers, GameEventDispatcher
 import gevent
 import uuid
+import LND_api
 
 
 class HoldemPokerGameFactory(GameFactory):
@@ -101,6 +102,7 @@ class HoldemPokerGame(PokerGame):
         sb_player.take_money(self._small_blind)
         bets[sb_player.id] = self._small_blind
 
+        pay_req = LND_api.request_invoice(self._small_blind)
         self._event_dispatcher.bet_event(
             player=sb_player,
             bet=self._small_blind,
@@ -108,6 +110,7 @@ class HoldemPokerGame(PokerGame):
             bets=bets
         )
 
+        pay_req = LND_api.request_invoice(self._big_blind)
         bb_player = active_players[-1]
         bb_player.take_money(self._big_blind)
         bets[bb_player.id] = self._big_blind

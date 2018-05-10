@@ -261,6 +261,10 @@ PyPoker = {
                 case 'fold':
                     PyPoker.Game.playerFold(message.player);
                     break;
+                case 'pay_req':
+                    console.log("===================================");
+                    console.log("got a pay_req! just me! the msg is: "+message.pay_req);
+                    console.log("===================================");
                 case 'bet':
                     PyPoker.Game.updatePlayer(message.player);
                     PyPoker.Game.updatePlayersBet(message.bets);
