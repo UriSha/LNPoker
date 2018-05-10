@@ -10,6 +10,7 @@ class GameServerRedis(GameServer):
         self._connection_queue = MessageQueue(redis, connection_channel)
 
     def _connect_player(self, message):
+        print "in _connect_player"
         try:
             timeout_epoch = int(message["timeout_epoch"])
         except IndexError:
@@ -72,7 +73,10 @@ class GameServerRedis(GameServer):
 
     def new_players(self):
         while True:
+            print "in new_players redis"
             try:
+                print "before yield"
                 yield self._connect_player(self._connection_queue.pop())
+                print "after yeild"
             except (ChannelError, MessageTimeout, MessageFormatError) as e:
                 self._logger.error("Unable to connect the player: {}".format(e.args[0]))

@@ -635,6 +635,8 @@ PyPoker = {
 }
 
 $(document).ready(function() {
+
     PyPoker.init();
+
 })
 

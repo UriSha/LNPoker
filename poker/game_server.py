@@ -18,6 +18,7 @@ class GameServer:
         return "server {}".format(self._id)
 
     def new_players(self):
+        print "in new_players"
         raise NotImplementedError
 
     def _join_room(self, player):
@@ -42,7 +43,9 @@ class GameServer:
     def start(self):
         self._logger.info("{}: running".format(self))
         self.on_start()
+        print "hii"
         try:
+            print "hey123"
             for player in self.new_players():
                 try:
                     # Player successfully connected: joining the lobby
@@ -55,9 +58,12 @@ class GameServer:
                     # Close bad connections and ignore the connection
                     self._logger.exception("{}: bad connection".format(self))
                     pass
+                # print "hey456"
         finally:
+            # print "hey789"
             self._logger.info("{}: terminating".format(self))
             self.on_shutdown()
+        # print "hey"
 
     def on_start(self):
         pass

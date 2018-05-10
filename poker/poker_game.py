@@ -614,8 +614,9 @@ class PokerGame:
             except ZeroDivisionError:
                 raise GameError("No players left")
             else:
-                for winner in winners:
+                for winner in winners:  # TODO LNdragons
                     winner.add_money(money_split)
+
 
                 self._event_dispatcher.winner_designation_event(
                     players=self._game_players.active,
