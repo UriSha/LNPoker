@@ -640,8 +640,29 @@ class PokerGame:
                 raise GameError("No players left")
             else:
                 for winner in winners:  # TODO LNdragons
-                    winner.add_money(money_split)
 
+
+                    winner.send_message({
+                        "message_type": "game-update",
+                        "event": "winner",
+                        "money": money_split,
+                        "player": winner.dto()
+                    })
+
+                    timeout_epoch = time.time() + 30
+                    message = winner.recv_message(timeout_epoch=timeout_epoch)
+                    MessageFormatError.validate_message_type(message, "pay_req_c")
+                    if LND_api.send_payment(message["pay_req_c"]):
+                        print "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+                        print "server sent {} to winner and pay_req_c is: {}".format(message["amount"],
+                                                                                     message["pay_req_c"])
+                        print "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+                    else:
+                        print "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+                        print "was not able to send money to winner"
+                        print "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+
+                    winner.add_money(money_split)
 
                 self._event_dispatcher.winner_designation_event(
                     players=self._game_players.active,
