@@ -448,7 +448,7 @@ class GameBetRounder:
                     "message_type": "game-update",
                     "event": "pay_req",
                     "pay_req": pay_req,
-                    "player": player.dto()
+                    "player": dealer.dto()
 
                 })
                 dealer.take_money(bet)
