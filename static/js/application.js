@@ -265,6 +265,11 @@ PyPoker = {
                     console.log("===================================");
                     console.log("got a pay_req! just me! the msg is: "+message.pay_req);
                     console.log("===================================");
+                   //var ok = sendPay(message.pay_req);
+                    PyPoker.socket.send(JSON.stringify({
+                        'message_type': 'paymentDone',
+                    }));
+
                 case 'bet':
                     PyPoker.Game.updatePlayer(message.player);
                     PyPoker.Game.updatePlayersBet(message.bets);

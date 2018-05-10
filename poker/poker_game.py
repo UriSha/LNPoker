@@ -443,14 +443,31 @@ class GameBetRounder:
             else:
                 if bet < min_bet or bet > max_bet:
                     raise ValueError("Invalid bet")
-                pay_req = LND_api.request_invoice(bet)
-                dealer.send_message({
-                    "message_type": "game-update",
-                    "event": "pay_req",
-                    "pay_req": pay_req,
-                    "player": dealer.dto()
 
-                })
+                if bet > 0:
+                    pay_req = LND_api.request_invoice(bet)
+                    dealer.send_message({
+                        "message_type": "game-update",
+                        "event": "pay_req",
+                        "pay_req": pay_req,
+                        "player": dealer.dto()
+
+                    })
+                    timeout_epoch = time.time() + 30
+                    # while not LND_api.sent:
+                    #     time.sleep(1)
+                    message = dealer.recv_message(timeout_epoch=timeout_epoch)
+                    MessageFormatError.validate_message_type(message, "paymentDone")
+                    print "=========================="
+                    print "got confirmation!!!!!!!!!!"
+                    print "=========================="
+                # LND_api.sent = True
+
+
+
+
+
+
                 dealer.take_money(bet)
                 bets[dealer.id] += bet
                 if best_player is None or bet > min_bet:
