@@ -1,7 +1,8 @@
-from . import DeckFactory, HoldemPokerScoreDetector
+from . import DeckFactory, HoldemPokerScoreDetector, MessageFormatError
 from poker_game import PokerGame, GameFactory, GameError, EndGameException, GamePlayers, GameEventDispatcher
 import gevent
 import uuid
+import time
 import LND_api
 
 
@@ -103,6 +104,27 @@ class HoldemPokerGame(PokerGame):
         bets[sb_player.id] = self._small_blind
 
         pay_req = LND_api.request_invoice(self._small_blind)
+        sb_player.send_message({
+            "message_type": "game-update",
+            "event": "pay_req",
+            "pay_req": pay_req,
+            "player": sb_player.dto()
+
+        })
+        timeout_epoch = time.time() + 30
+
+        message = sb_player.recv_message(timeout_epoch=timeout_epoch)
+        MessageFormatError.validate_message_type(message, "paymentDone")
+        if LND_api.is_received(pay_req):
+            print "=========================="
+            print "small blind confirmation!!!!!!!!!!"
+            print "=========================="
+        else:
+            # TODO
+            print "???????????????????????????"
+            print "no small blind confirmation!!!!!!!!!!"
+            print "???????????????????????????"
+
         self._event_dispatcher.bet_event(
             player=sb_player,
             bet=self._small_blind,
@@ -110,10 +132,32 @@ class HoldemPokerGame(PokerGame):
             bets=bets
         )
 
-        pay_req = LND_api.request_invoice(self._big_blind)
         bb_player = active_players[-1]
         bb_player.take_money(self._big_blind)
         bets[bb_player.id] = self._big_blind
+
+        pay_req = LND_api.request_invoice(self._big_blind)
+
+        bb_player.send_message({
+            "message_type": "game-update",
+            "event": "pay_req",
+            "pay_req": pay_req,
+            "player": bb_player.dto()
+
+        })
+        timeout_epoch = time.time() + 30
+
+        message = bb_player.recv_message(timeout_epoch=timeout_epoch)
+        MessageFormatError.validate_message_type(message, "paymentDone")
+        if LND_api.is_received(pay_req):
+            print "=========================="
+            print "big blind confirmation!!!!!!!!!!"
+            print "=========================="
+        else:
+            # TODO
+            print "???????????????????????????"
+            print "no big blind confirmation!!!!!!!!!!"
+            print "???????????????????????????"
 
         self._event_dispatcher.bet_event(
             player=bb_player,

@@ -454,20 +454,18 @@ class GameBetRounder:
 
                     })
                     timeout_epoch = time.time() + 30
-                    # while not LND_api.sent:
-                    #     time.sleep(1)
+
                     message = dealer.recv_message(timeout_epoch=timeout_epoch)
                     MessageFormatError.validate_message_type(message, "paymentDone")
                     if LND_api.is_received(pay_req):
                         print "=========================="
                         print "got confirmation!!!!!!!!!!"
                         print "=========================="
-                # LND_api.sent = True
-
-
-
-
-
+                    else:
+                        # TODO
+                        print "???????????????????????????"
+                        print "no confirmation!!!!!!!!!!"
+                        print "???????????????????????????"
 
                 dealer.take_money(bet)
                 bets[dealer.id] += bet
