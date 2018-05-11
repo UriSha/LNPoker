@@ -1,8 +1,9 @@
 class Player:
-    def __init__(self, id, name, money):
+    def __init__(self, id, name, money, serial):
         self._id = id
         self._name = name
         self._money = money
+        self._serial = serial
 
     @property
     def id(self):
@@ -16,11 +17,16 @@ class Player:
     def money(self):
         return self._money
 
+    @property
+    def serial(self):
+        return self._serial
+
     def dto(self):
         return {
             "id": self.id,
             "name": self.name,
-            "money": self.money
+            "money": self.money,
+            "serial": self.serial
         }
 
     def take_money(self, money):

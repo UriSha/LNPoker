@@ -5,6 +5,7 @@ import grpc
 import os
 import codecs
 TIMEOUT_OFF = 300
+DEBUG = True
 
 # Due to updated ECDSA generated tls.cert we need to let gprc know that
 # we need to use that cipher suite otherwise there will be a handhsake
@@ -45,7 +46,8 @@ stub = getStub('localhost:10009')
 
 # create invoice for amount and return payment_request
 def request_invoice(amt):
-
+    if DEBUG:
+        return "mock pay_req"
     request = ln.Invoice(value=int(amt))
     response = stub.AddInvoice(request)
     return response.payment_request
@@ -53,6 +55,8 @@ def request_invoice(amt):
 
 # check invoice received
 def is_received(pay_req):
+    if DEBUG:
+        return True
     # first decode pay_req to get pay_hash
     request = ln.PayReqString(pay_req=pay_req)
     response = stub.DecodePayReq(request)
@@ -66,6 +70,8 @@ def is_received(pay_req):
 
 # send payment by request
 def send_payment(pay_req):
+    if DEBUG:
+        return True
     request = ln.SendRequest(payment_request=pay_req)
     response = stub.SendPaymentSync(request)
     return True

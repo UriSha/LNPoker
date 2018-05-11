@@ -49,6 +49,13 @@ class GameServerRedis(GameServer):
         except ValueError:
             raise MessageFormatError(attribute="player.money",
                                      desc="'{}' is not a number".format(message["player"]["money"]))
+        try:
+            player_serial = int(message["player"]["serial"])
+        except IndexError:
+            raise MessageFormatError(attribute="player.serial", desc="Missing attribute")
+        except ValueError:
+            raise MessageFormatError(attribute="player.serial",
+                                     desc="'{}' is not a number".format(message["player"]["serial"]))
 
         player = PlayerServer(
             channel=ChannelRedis(
@@ -60,6 +67,7 @@ class GameServerRedis(GameServer):
             id=player_id,
             name=player_name,
             money=player_money,
+            serial=player_serial
         )
 
         # Acknowledging the connection

@@ -17,7 +17,8 @@ oauth = OAuth(app)
 
 redis_url = os.environ["REDIS_URL"]
 redis = redis.from_url(redis_url)
-
+id_to_serial = {}
+num_of_sessions = 0
 
 # facebook = oauth.remote_app(
 #     "facebook",
@@ -103,6 +104,7 @@ def traditional_poker_game(ws):
 
 
 def poker_game(ws, connection_channel):
+    global id_to_serial, num_of_sessions
     client_channel = ChannelWebSocket(ws)
 
     if "player-id" not in session:
@@ -115,6 +117,11 @@ def poker_game(ws, connection_channel):
     player_id = session["player-id"]
     player_name = session["player-name"]
     player_money = session["player-money"]
+    if player_id not in id_to_serial:
+        num_of_sessions += 1
+        id_to_serial[player_id] = num_of_sessions
+    player_serial = id_to_serial[player_id]
+
 
     player_connector = PlayerClientConnector(redis, connection_channel, app.logger)
 
@@ -123,7 +130,8 @@ def poker_game(ws, connection_channel):
             player=Player(
                 id=player_id,
                 name=player_name,
-                money=player_money
+                money=player_money,
+                serial=player_serial,
             ),
             session_id=session_id
         )

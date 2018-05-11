@@ -19,7 +19,8 @@ class PlayerClientConnector:
                 "player": {
                     "id": player.id,
                     "name": player.name,
-                    "money": player.money
+                    "money": player.money,
+                    "serial": player.serial
                 },
                 "session_id": session_id
             }

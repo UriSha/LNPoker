@@ -1,3 +1,4 @@
+var mySerial = -1;
 PyPoker = {
 
     socket: null,
@@ -281,6 +282,7 @@ PyPoker = {
                         'pay_req_c': pay_req_c, // TODO
                         'amount': message.money
                     }));
+                    break;
                 case 'bet':
                     PyPoker.Game.updatePlayer(message.player);
                     PyPoker.Game.updatePlayersBet(message.bets);
@@ -643,6 +645,7 @@ PyPoker = {
     onConnect: function (message) {
         PyPoker.Logger.log("Connection established with poker5 server: " + message.server_id);
         $('#current-player').attr('data-player-id', message.player.id);
+        mySerial = message.player.serial
     },
 
     onDisconnect: function (message) {
