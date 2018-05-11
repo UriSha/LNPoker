@@ -22,8 +22,7 @@ client i: can verify that s_i appears in rand_seed
           simulate and verify sha256(rand_seed) as randomness for hand play
 ```
 
-//TODO add a snapshot of full screen and shell
-
+![screenshot](https://github.com/UriSha/pypoker/blob/master/LNPoker%20screenshot.jpg)
 ## Prerequisites
 
 in order to run the poker server you need to have the following apps:
