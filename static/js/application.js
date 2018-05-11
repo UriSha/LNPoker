@@ -1,3 +1,4 @@
+$.ajaxSetup({async: false});
 var mySerial = -1;
 PyPoker = {
 
@@ -266,20 +267,34 @@ PyPoker = {
                     console.log("===================================");
                     console.log("got a pay_req! just me! the msg is: " + message.pay_req);
                     console.log("===================================");
-                    //var ok = sendPay(message.pay_req);
-                    PyPoker.socket.send(JSON.stringify({
-                        'message_type': 'paymentDone'
-                    }));
+
+                    var portnum1 = 8080 + mySerial;
+                    var payment_call = $.ajax('http://localhost:' + portnum1 + '/send_payment/' + message.pay_req);
+                    var ok = payment_call.responseText;
+                    if (ok == "true") {
+                        console.log("send_payment return true!! for pay_req "+ message.pay_req);
+                        PyPoker.socket.send(JSON.stringify({
+                            'message_type': 'paymentDone'
+                        }));
+                    }
+
+
+                    // //var ok = sendPay(message.pay_req);
+                    // PyPoker.socket.send(JSON.stringify({
+                    //     'message_type': 'paymentDone'
+                    // }));
                     break;
                 case 'winner':
-                  //  var pay_req_c = request_invoice(message.money); // TODO
+                    //  var pay_req_c = request_invoice(message.money); // TODO
+                    var portnum = 8080 + mySerial;
+                    var invoice_call = $.ajax('http://localhost:' + portnum + '/request_invoice/' + message.money);
+                    var pay_req_c = invoice_call.responseText;
                     console.log("*********************************");
-                    console.log("I am the winner! i got " + message.money);
+                    console.log("I am the winner! i got " + message.money + " and my pay_req_c is: " + pay_req_c);
                     console.log("*******************************");
-                    var pay_req_c = "abra";
                     PyPoker.socket.send(JSON.stringify({
                         'message_type': 'pay_req_c',
-                        'pay_req_c': pay_req_c, // TODO
+                        'pay_req_c': pay_req_c,
                         'amount': message.money
                     }));
                     break;

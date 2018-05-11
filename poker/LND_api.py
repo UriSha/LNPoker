@@ -5,7 +5,7 @@ import grpc
 import os
 import codecs
 TIMEOUT_OFF = 300
-DEBUG = True
+DEBUG = False
 
 # Due to updated ECDSA generated tls.cert we need to let gprc know that
 # we need to use that cipher suite otherwise there will be a handhsake

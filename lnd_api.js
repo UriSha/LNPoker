@@ -4,7 +4,7 @@ var fs = require("fs");
 // Due to updated ECDSA generated tls.cert we need to let gprc know that
 // we need to use that cipher suite otherwise there will be a handhsake
 // error when we communicate with the lnd rpc server.
-process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA'
+process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA';
 //TODO remove/mock tls
 var tls = `
 -----BEGIN CERTIFICATE-----

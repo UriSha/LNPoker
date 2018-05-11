@@ -12,21 +12,25 @@ CORS(app)
 app.config["SECRET_KEY"] = "!!_-pyp0k3r-_!!"
 app.debug = True
 
+
 @app.route("/send_payment/<string:payment_request>")
 def send_payment(payment_request):
     if (lndapi.send_payment(payment_request)):
         return "true"
     return "false"
 
+
 @app.route("/request_invoice/<int:amount>")
 def request_invoice(amount):
     return lndapi.request_invoice(amount)
+
 
 @app.route("/is_received/<string:payment_request>")
 def is_received(payment_request):
     if (lndapi.is_received(payment_request)):
         return "true"
     return "false"
+
 
 port_num = 0
 if __name__ == "__main__":
