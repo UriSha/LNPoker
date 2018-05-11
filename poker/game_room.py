@@ -202,7 +202,7 @@ class GameRoom(GameSubscriber):
                     self.remove_inactive_players()
 
                     players = self._room_players.players
-                    if len(players) < 2:
+                    if len(players) < 3:
                         raise GameError("At least two players needed to start a new game")
 
                     dealer_key = (dealer_key + 1) % len(players)

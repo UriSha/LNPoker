@@ -453,7 +453,7 @@ class GameBetRounder:
                         "player": dealer.dto()
 
                     })
-                    timeout_epoch = time.time() + 30
+                    timeout_epoch = time.time() + LND_api.TIMEOUT_OFF
 
                     message = dealer.recv_message(timeout_epoch=timeout_epoch)
                     MessageFormatError.validate_message_type(message, "paymentDone")
