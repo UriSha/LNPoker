@@ -43,9 +43,9 @@ class GameServer:
     def start(self):
         self._logger.info("{}: running".format(self))
         self.on_start()
-        print "hii"
+       # print "hii"
         try:
-            print "hey123"
+           # print "hey123"
             for player in self.new_players():
                 try:
                     # Player successfully connected: joining the lobby
