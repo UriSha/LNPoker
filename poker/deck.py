@@ -1,19 +1,25 @@
 import random
 from . import Card
+import hashlib
 
 
 class DeckFactory:
     def __init__(self, lowest_rank):
         self._lowest_rank = lowest_rank
 
-    def create_deck(self):
-        return Deck(self._lowest_rank)
+    def create_deck(self, seeds):
+        return Deck(self._lowest_rank, seeds)
 
 
 class Deck:
-    def __init__(self, lowest_rank):
+    def __init__(self, lowest_rank, seeds):
         self._cards = [Card(rank, suit) for rank in range(lowest_rank, 15) for suit in range(0, 4)]
         self._discard = []
+        conc_seed = ''
+        for seed in seeds:
+            conc_seed = conc_seed + str(seed)
+        rand_seed = hashlib.sha256(conc_seed).hexdigest()
+        random.seed(int(rand_seed, 16))
         random.shuffle(self._cards)
 
     def pop_cards(self, num_cards=1):

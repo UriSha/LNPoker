@@ -40,7 +40,7 @@ class GameEventDispatcher:
         self._logger.debug(
             "\n" +
             ("-" * 80) + "\n"
-            "GAME: {}\nEVENT: {}".format(self._game_id, event) + "\n" +
+                         "GAME: {}\nEVENT: {}".format(self._game_id, event) + "\n" +
             str(event_data) + "\n" +
             ("-" * 80) + "\n"
         )
@@ -74,7 +74,7 @@ class GameEventDispatcher:
             }
         )
 
-    def winner_designation_event(self, players, pot, winners, money_split, upcoming_pots):
+    def winner_designation_event(self, players, pot, winners, money_split, upcoming_pots, seeds):
         self.raise_event(
             "winner-designation",
             {
@@ -91,7 +91,8 @@ class GameEventDispatcher:
                     }
                     for upcoming_pot in upcoming_pots
                 ],
-                "players": {player.id: player.dto() for player in players}
+                "players": {player.id: player.dto() for player in players},
+                "seeds": seeds
             }
         )
 
@@ -573,6 +574,8 @@ class PokerGame:
         self._score_detector = score_detector
         self._bet_handler = self._create_bet_handler()
         self._winners_detector = self._create_winners_detector()
+        self._local_seed = 0
+        self._seeds = []
 
     @property
     def event_dispatcher(self):
@@ -641,7 +644,6 @@ class PokerGame:
             else:
                 for winner in winners:
 
-
                     winner.send_message({
                         "message_type": "game-update",
                         "event": "winner",
@@ -664,13 +666,21 @@ class PokerGame:
 
                     winner.add_money(money_split)
 
+                conc_seed = ''
+                for seed in self._seeds:
+                    conc_seed = conc_seed + str(seed)
+
                 self._event_dispatcher.winner_designation_event(
                     players=self._game_players.active,
                     pot=pot,
                     winners=winners,
                     money_split=money_split,
-                    upcoming_pots=pots[(i + 1):]
+                    upcoming_pots=pots[(i + 1):],
+                    seeds=conc_seed
                 )
+                # print "seeds: "
+                # print self._seeds
+                # print "local_seed: "+ str(self._local_seed)
 
                 gevent.sleep(self.WAIT_AFTER_WINNER_DESIGNATION)
 

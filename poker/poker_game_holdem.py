@@ -4,6 +4,9 @@ import gevent
 import uuid
 import time
 import LND_api
+import random
+import sys
+import hashlib
 
 
 class HoldemPokerGameFactory(GameFactory):
@@ -201,7 +204,29 @@ class HoldemPokerGame(PokerGame):
 
         # Initialization
         self._game_players.reset()
-        deck = self._deck_factory.create_deck()
+
+        self._local_seed = random.randint(0, sys.maxint)
+        hash_seed = hashlib.sha256(str(self._local_seed)).hexdigest()
+
+        self._seeds = []
+        for player in self._game_players.active:
+            player.send_message({
+                "message_type": "game-update",
+                "event": "seed_req",
+                "serv_seed": hash_seed
+            })
+            timeout_epoch = time.time() + LND_api.TIMEOUT_OFF
+
+            message = player.recv_message(timeout_epoch=timeout_epoch)
+            MessageFormatError.validate_message_type(message, "seed_ans")
+            print type(message['seed_val'])
+
+            self._seeds.append(message['seed_val'])
+
+        # print self._seeds
+        self._seeds.append(self._local_seed)
+
+        deck = self._deck_factory.create_deck(self._seeds)
         scores = self._create_scores()
         pots = self._create_pots()
 

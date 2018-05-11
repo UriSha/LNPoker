@@ -263,6 +263,17 @@ PyPoker = {
                 case 'fold':
                     PyPoker.Game.playerFold(message.player);
                     break;
+                case 'seed_req':
+                    console.log("player number " + mySerial + " sending seed");
+
+                    var seed = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+                    PyPoker.socket.send(JSON.stringify({
+                        'message_type': 'seed_ans',
+                        'seed_val': seed
+                    }));
+
+
+                    break;
                 case 'pay_req':
                     console.log("===================================");
                     console.log("got a pay_req! just me! the msg is: " + message.pay_req);
@@ -272,7 +283,7 @@ PyPoker = {
                     var payment_call = $.ajax('http://localhost:' + portnum1 + '/send_payment/' + message.pay_req);
                     var ok = payment_call.responseText;
                     if (ok == "true") {
-                        console.log("send_payment return true!! for pay_req "+ message.pay_req);
+                        console.log("send_payment return true!! for pay_req " + message.pay_req);
                         PyPoker.socket.send(JSON.stringify({
                             'message_type': 'paymentDone'
                         }));
@@ -323,6 +334,7 @@ PyPoker = {
                     PyPoker.Game.updatePlayers(message.players);
                     PyPoker.Game.updatePots(message.pots);
                     PyPoker.Game.setWinners(message.pot);
+                    console.log(message.seeds)
                     break;
                 case 'showdown':
                     PyPoker.Game.updatePlayersCards(message.players);
