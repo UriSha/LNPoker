@@ -194,16 +194,15 @@ def poker_game(ws, connection_channel):
 def get_random_name():
     names = [
         "Satoshi Nakamoto",
+        "Thaddeus Dryja",
+        "Joseph Poon"
         "Alice",
         "Bob",
-        "Meni Rosenfeld",
-        "Nadav Ivgi",
-        "Udi Wertheimer",
-        "Youval Rouach",
-        "Ofer Rotem",
-        "David",
-        "Uri",
-        "Udi"
+        "Charlie",
+        "Dave",
+        "Eve",
+        "Frank",
+        "George"
     ]
     return random.choice(names)
 
