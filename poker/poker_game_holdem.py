@@ -111,7 +111,7 @@ class HoldemPokerGame(PokerGame):
             "player": sb_player.dto()
 
         })
-        timeout_epoch = time.time() + 30
+        timeout_epoch = time.time() + LND_api.TIMEOUT_OFF
 
         message = sb_player.recv_message(timeout_epoch=timeout_epoch)
         MessageFormatError.validate_message_type(message, "paymentDone")
@@ -145,7 +145,7 @@ class HoldemPokerGame(PokerGame):
             "player": bb_player.dto()
 
         })
-        timeout_epoch = time.time() + 30
+        timeout_epoch = time.time() + LND_api.TIMEOUT_OFF
 
         message = bb_player.recv_message(timeout_epoch=timeout_epoch)
         MessageFormatError.validate_message_type(message, "paymentDone")
